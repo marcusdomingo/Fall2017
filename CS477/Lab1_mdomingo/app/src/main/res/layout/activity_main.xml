@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/navajoWhite"
+    tools:context="com.example.marcus.lab1.MainActivity">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <EditText android:id="@+id/entry"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/number"
+            android:background="@android:drawable/editbox_background"/>
+        <Button android:id="@+id/clear"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_toEndOf="@id/entry"
+            android:onClick="clearNumber"
+            android:text="@string/clear" />
+
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/entry"
+            android:id="@+id/radioButtons"
+            android:orientation="vertical">
+            <RadioButton android:id="@+id/binary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/binary"
+                android:onClick="onRadioButtonClicked"/>
+            <RadioButton android:id="@+id/octal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/octal"
+                android:onClick="onRadioButtonClicked"/>
+            <RadioButton android:id="@+id/decimal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/decimal"
+                android:onClick="onRadioButtonClicked"/>
+            <RadioButton android:id="@+id/hex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hex"
+                android:onClick="onRadioButtonClicked"/>
+        </RadioGroup>
+
+        <Button android:id="@+id/convert"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/radioButtons"
+            android:onClick="convertValues"
+            android:text="@string/convert" />
+
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/convert"
+            android:stretchColumns="1">
+            <TableRow>
+                <TextView
+                    android:text="@string/binary"
+                    android:textColor="@color/black"
+                    android:padding="3dip" />
+                <TextView
+                    android:id="@+id/binRes"
+                    android:text="@string/zero"
+                    android:textColor="@color/black"
+                    android:gravity="end"
+                    android:paddingStart="0dip"
+                    android:paddingEnd="160dip" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:text="@string/octal"
+                    android:textColor="@color/black"
+                    android:padding="3dip" />
+                <TextView
+                    android:id="@+id/octRes"
+                    android:text="@string/zero"
+                    android:textColor="@color/black"
+                    android:gravity="end"
+                    android:paddingStart="0dip"
+                    android:paddingEnd="160dip" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:text="@string/decimal"
+                    android:textColor="@color/black"
+                    android:padding="3dip" />
+                <TextView
+                    android:id="@+id/decRes"
+                    android:text="@string/zero"
+                    android:textColor="@color/black"
+                    android:gravity="end"
+                    android:paddingStart="0dip"
+                    android:paddingEnd="160dip" />
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                    android:text="@string/hex"
+                    android:textColor="@color/black"
+                    android:padding="3dip" />
+                <TextView
+                    android:id="@+id/hexRes"
+                    android:text="@string/zero"
+                    android:textColor="@color/black"
+                    android:gravity="end"
+                    android:paddingStart="0dip"
+                    android:paddingEnd="160dip" />
+            </TableRow>
+        </TableLayout>
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

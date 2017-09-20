@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Lab1 Base Converter mdomingo</string>
+    <string name="number">number</string>
+    <string name="clear">CLEAR</string>
+    <string name="convert">CONVERT</string>
+    <string name="binary">Binary</string>
+    <string name="octal">Octal</string>
+    <string name="decimal">Decimal</string>
+    <string name="hex">Hex</string>
+    <string name="zero">0</string>
+</resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.white.unitconvert.MainActivity">
+
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent"  >
+        <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/top">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="10dip" android:text="Units" android:textColor="#000000" android:textSize="15sp" android:textStyle="bold"/>
+            <EditText android:id="@+id/units" android:layout_width="fill_parent" android:layout_height="wrap_content" android:hint="type a number" android:inputType="numberDecimal|numberSigned" android:maxLines="1"/>
+        </LinearLayout>
+        <Spinner android:id="@+id/conversions" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_below="@id/top" android:prompt="@string/prompt"/>
+        <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_below="@id/conversions">
+            <Button android:id="@+id/clear" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1" android:text="Clear"/>
+            <Button android:id="@+id/convert" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1" android:text="Convert"/>
+            <Button android:id="@+id/close" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1" android:text="Close"/>
+        </LinearLayout>
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>

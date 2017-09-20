@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AR GPS</string>
+    <string name="start">START</string>
+    <string name="end">END</string>
+</resources>
