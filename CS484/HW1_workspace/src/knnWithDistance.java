@@ -121,7 +121,7 @@ public class knnWithDistance {
 		
 		try(BufferedWriter bw = new BufferedWriter(new FileWriter("result.dat"))) {
 			
-			while (!(count > 18506)) {
+			while (count != 18506) {
 				
 				List<Double> neighbors = new ArrayList<Double>();
 				List<Boolean> neighborTypes = new ArrayList<Boolean>();
