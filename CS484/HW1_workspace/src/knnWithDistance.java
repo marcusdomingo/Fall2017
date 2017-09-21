@@ -1,3 +1,10 @@
+/*
+ * Author: Marcus Domingo
+ * Date: 9/21/2017
+ * HW 1: K-Nearest Neighbor Classifier
+ * Description: Uses KNN with Euclidean distance method to calculate the nearest neighbors.
+ */
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -9,54 +16,78 @@ import java.util.List;
 
 public class knnWithDistance {
 	
+	// Dictionaries contain all the words that occur in the collection
+	// Dictionaries run in parallel with the word occurrence
+	// Ranks is either a positive or negative value for the word dependent on the collection frequency
 	private List<String> trainDictionary = new ArrayList<String>();
 	private List<String> testDictionary = new ArrayList<String>();
-	private List<Integer[]> trainFreqs = new ArrayList<Integer[]>();
-	private List<Integer[]> testFreqs = new ArrayList<Integer[]>();
 	private List<Integer> trainOccurs = new ArrayList<Integer>();
 	private List<Integer> testOccurs = new ArrayList<Integer>();
-	private List<Boolean> reviews = new ArrayList<Boolean>();
 	private List<Integer> trainRanks = new ArrayList<Integer>();
+	
+	// Words contain the matrices of the words that appear in a review
+	// Words run in parallel with the word frequency in the review
 	private List<String[]> trainWords = new ArrayList<String[]>();
 	private List<String[]> testWords = new ArrayList<String[]>();
+	private List<Integer[]> trainFreqs = new ArrayList<Integer[]>();
+	private List<Integer[]> testFreqs = new ArrayList<Integer[]>();
+	private List<Boolean> trainReviews = new ArrayList<Boolean>();
+	
+	// X and Y contain the x(positive) and the y(negative) values of each review.
 	private List<Double> trainX = new ArrayList<Double>();
 	private List<Double> trainY = new ArrayList<Double>();
 	private List<Double> testX = new ArrayList<Double>();
 	private List<Double> testY = new ArrayList<Double>();
-	private String[] stopwords = {};
-//	private String[] stopwords = {"a", "about", "above", "above", "across", "after", "afterwards", "again", "against", "all", "almost", "alone", "along", "already", "also","although","always","am","among", "amongst", "amoungst", "amount",  "an", "and", "another", "any","anyhow","anyone","anything","anyway", "anywhere", "are", "around", "as",  "at", "back","be","became", "because","become","becomes", "becoming", "been", "before", "beforehand", "behind", "being", "below", "beside", "besides", "between", "beyond", "bill", "both", "bottom","but", "by", "call", "can", "cannot", "cant", "co", "con", "could", "couldnt", "cry", "de", "describe", "detail", "do", "done", "down", "due", "during", "each", "eg", "eight", "either", "eleven","else", "elsewhere", "empty", "enough", "etc", "even", "ever", "every", "everyone", "everything", "everywhere", "except", "few", "fifteen", "fify", "fill", "find", "fire", "first", "five", "for", "former", "formerly", "forty", "found", "four", "from", "front", "full", "further", "get", "give", "go", "had", "has", "hasnt", "have", "he", "hence", "her", "here", "hereafter", "hereby", "herein", "hereupon", "hers", "herself", "him", "himself", "his", "how", "however", "hundred", "ie", "if", "in", "inc", "indeed", "interest", "into", "is", "it", "its", "itself", "keep", "last", "latter", "latterly", "least", "less", "ltd", "made", "many", "may", "me", "meanwhile", "might", "mill", "mine", "more", "moreover", "most", "mostly", "move", "much", "must", "my", "myself", "name", "namely", "neither", "never", "nevertheless", "next", "nine", "no", "nobody", "none", "noone", "nor", "not", "nothing", "now", "nowhere", "of", "off", "often", "on", "once", "one", "only", "onto", "or", "other", "others", "otherwise", "our", "ours", "ourselves", "out", "over", "own","part", "per", "perhaps", "please", "put", "rather", "re", "same", "see", "seem", "seemed", "seeming", "seems", "serious", "several", "she", "should", "show", "side", "since", "sincere", "six", "sixty", "so", "some", "somehow", "someone", "something", "sometime", "sometimes", "somewhere", "still", "such", "system", "take", "ten", "than", "that", "the", "their", "them", "themselves", "then", "thence", "there", "thereafter", "thereby", "therefore", "therein", "thereupon", "these", "they", "thickv", "thin", "third", "this", "those", "though", "three", "through", "throughout", "thru", "thus", "to", "together", "too", "top", "toward", "towards", "twelve", "twenty", "two", "un", "under", "until", "up", "upon", "us", "very", "via", "was", "we", "well", "were", "what", "whatever", "when", "whence", "whenever", "where", "whereafter", "whereas", "whereby", "wherein", "whereupon", "wherever", "whether", "which", "while", "whither", "who", "whoever", "whole", "whom", "whose", "why", "will", "with", "within", "without", "would", "yet", "you", "your", "yours", "yourself", "yourselves", "the"};
-//	private String[] stopwords = {"a", "an", "and", "are", "as", "at", "be", "but", "by",
-//			"for", "if", "in", "into", "is", "it",
-//			"no", "not", "of", "on", "or", "such",
-//			"that", "the", "their", "then", "there", "these",
-//			"they", "this", "to", "was", "will", "with"};
-//	private String[] stopwords = {"the","of","and","a","to","in","is","you","that","it","he","was","for","on","are","as","with","his","they","I","at","be","this","have","from","or","one","had","by","word","but","what","all","were","we","when","your","can","said","there","use","an","each","which","she","do","how","their","if","will","up","other","about","out","many","then","them","these","so","some","her","would","make","like","him","into","time","has","look","two","more","write","go","see","number","way","could","people","my","than","first","water","been","call","who","oil","its","now","find","long","down","day","did","get","come","made","may","part"};
 	
 	public static void main(String[] args) {
+		
+		// To call private variables and methods
 		knnWithDistance knn = new knnWithDistance();
+		
+		// To read in file
 		BufferedReader br = null;
 		FileReader fr = null;
 		
 		try {
 
+			// Read in train file
 			fr = new FileReader("1504108575_8218148_train_file.data");
 			br = new BufferedReader(fr);
+			
+			// Count to know what line is being read in from training data
 			int count = 1;
 
 			String sCurrentLine;
+			
+			// Read all the lines
 			while ((sCurrentLine = br.readLine()) != null) {
+				// Split the current line on all spaces
 				String[] line  = sCurrentLine.split("\\s");
+				
+				// Print line count and increment
 				System.out.println(count);
 				count++;
+				
+				// Check if the review was positive or negative
 				if(line[0].equals("+1")) {
-					knn.reviews.add(true);
+					
+					// Add a true for positive
+					// Replace characters that link words with spaces and split again on spaces
+					// Call buildTrain
+					knn.trainReviews.add(true);
 					line = sCurrentLine.replaceAll("[-_/]", " ").split("\\s");
-					knn.giveRanks(line, true);
+					knn.buildTrain(line, true);
 				} else if (line[0].equals("-1")) {
-					knn.reviews.add(false);
+					
+					// Add a false for negative
+					// Replace characters that link words with spaces and split again on spaces
+					// Call buildTrain
+					knn.trainReviews.add(false);
 					line = sCurrentLine.replaceAll("[-_/]", " ").split("\\s");
-					knn.giveRanks(line, false);
+					knn.buildTrain(line, false);
 				} else {
+					
+					// Should never enter here
 					System.out.println("Houstoun we have a problem.");
 					System.exit(0);
 				}
@@ -68,26 +99,32 @@ public class knnWithDistance {
 
 		}
 		
-		knn.calculateWeight();
-//		System.out.println(knn.trainDictionary.size());
-//		System.out.println(knn.trainFreqs.size());
-//		System.out.println(knn.trainOccurs.size());
-//		System.out.println(knn.trainWords.size());
-//		System.out.println(knn.trainX.size());
-//		System.out.println(knn.trainY.size());
+		// Calculate tf-idf weights for training data
+		knn.tfidfTrain();
 				
 		try {
 
+			// Read in test file
 			fr = new FileReader("1504108575_8450022_test.data");
 			br = new BufferedReader(fr);
+			
+			// Count to know what line is being read in from test data
 			int count = 1;
 
 			String sCurrentLine;
+			
+			// Read all the lines
 			while ((sCurrentLine = br.readLine()) != null) {
+				
+				// Replace characters that link words with spaces and split on spaces
 				String[] line = sCurrentLine.replaceAll("[-_/]", " ").split("\\s");
+				
+				// Print line count and increment
 				System.out.println(count);
 				count++;
-				knn.giveRanksTest(line);
+				
+				// Call buildTest
+				knn.buildTest(line);
 			}
 
 		} catch (IOException e) {
@@ -95,6 +132,8 @@ public class knnWithDistance {
 			e.printStackTrace();
 
 		} finally {
+			
+			// Close the buffered and file readers
 			try {
 
 				if (br != null)
@@ -110,30 +149,40 @@ public class knnWithDistance {
 			}
 		}
 		
-		knn.calculateWeightTest();
-//		System.out.println(knn.testDictionary.size());
-//		System.out.println(knn.testFreqs.size());
-//		System.out.println(knn.testOccurs.size());
-//		System.out.println(knn.testWords.size());
+		// Calculate the tf-idf weights for test data
+		knn.tfidfTest();
 
-		int count = 0;
-		int k = 15;
-		
+		// Open a buffered writer
 		try(BufferedWriter bw = new BufferedWriter(new FileWriter("result.dat"))) {
 			
+			// Count for lines to write
+			int count = 0;
+			
+			// Number of neighbors to grab
+			int k = 201;
+			
+			// Only do 18506 times
 			while (count != 18506) {
 				
+				// Lists of neighbors and their types (positive/negative)
 				List<Double> neighbors = new ArrayList<Double>();
 				List<Boolean> neighborTypes = new ArrayList<Boolean>();
 				
-				for(int i = 0; i < knn.reviews.size(); i++) {
+				// For all the training reviews
+				for(int i = 0; i < knn.trainReviews.size(); i++) {
+					
+					// Get the x1 - x0 and y1 - y0
+					// Then calculate the Euclidean distance
 					double x = (knn.trainX.get(i) - knn.testX.get(count));
 					double y = (knn.trainY.get(i) - knn.testY.get(count));
 					double dist = Math.sqrt((x*x) + (y*y));
 					
+					// If neighbors is empty add
+					// Else inserted sort into neighbors and their types
+					// Remove the last element if it is over the amount of k elements
 					if(neighbors.isEmpty()) {
 						neighbors.add(dist);
-						neighborTypes.add(knn.reviews.get(i));
+						neighborTypes.add(knn.trainReviews.get(i));
 					} else {
 						int j;
 						for(j = 0; j < neighbors.size(); j++) {
@@ -144,10 +193,10 @@ public class knnWithDistance {
 						if(j < k) {
 							if(j < neighbors.size()) {
 								neighbors.add(j, dist);
-								neighborTypes.add(j, knn.reviews.get(i));
+								neighborTypes.add(j, knn.trainReviews.get(i));
 							} else {
 								neighbors.add(dist);
-								neighborTypes.add(knn.reviews.get(i));
+								neighborTypes.add(knn.trainReviews.get(i));
 							}
 						}
 						if(neighbors.size() > k) {
@@ -157,9 +206,11 @@ public class knnWithDistance {
 					}
 				}
 				
+				// Positive and negative review counts
 				int posCount = 0;
 				int negCount = 0;
 				
+				// Add up the number of positive and negative reviews
 				for(int i = 0; i < neighbors.size(); i++) {
 					if(neighborTypes.get(i)) {
 						posCount++;
@@ -168,7 +219,11 @@ public class knnWithDistance {
 					}
 				}
 				
+				// Increment the count
 				count++;
+				
+				// If there are more positive write +1 to file and print for visual
+				// Else write -1 to file and print for visual
 				if(posCount > negCount) {
 					bw.write("+1\n");
 					System.out.println("+++++++++++1 :::: " + count);
@@ -178,6 +233,7 @@ public class knnWithDistance {
 				}
 			}
 			
+			// Print done
 			System.out.println("Done");
 		} catch (IOException e) {
 			
@@ -185,12 +241,27 @@ public class knnWithDistance {
 		}
 	}
 	
-	private void giveRanks(String[] line, boolean isPositive) {
+	private void buildTrain(String[] line, boolean isPositive) {
+		
+		// tmpWords for array in trainWords
+		// tmpFreqs for array in trainFreqs
 		List<String> tmpWords = new ArrayList<String>();
 		List<Integer> tmpFreqs = new ArrayList<Integer>();
+		
+		// For words in the line, ignoring the first word because "+1" and "-1"
 		for(int i = 1; i < line.length; i++) {
+			
+			// Remove all special characters
 			String s = line[i].replaceAll("[^\\w\\s]", "").toLowerCase();
-			if(!s.equals("") && !Arrays.asList(stopwords).contains(s)) {
+			
+			// If there is a word
+			if(!s.equals("")) {
+				
+				// If the training dictionary already has the word
+				// Add +1 to the rank for positive and -1 for negative
+				// Else add to the training dictionary, 1 to the occurrence
+				// And +1 to the rank for positive and -1 for negative
+				// And add the word to tmpWords and 1 to frequency
 				if(trainDictionary.contains(s)) {
 					int wordIndex = trainDictionary.indexOf(s);
 					int rank = trainRanks.get(wordIndex);
@@ -199,6 +270,9 @@ public class knnWithDistance {
 					} else {
 						trainRanks.set(wordIndex, rank -1);
 					}
+					
+					// If tmpWords already has the word increment the frequency
+					// Else increment the words occurrence and add the word to tmpWords and 1 to frequency
 					if(tmpWords.contains(s)) {
 						int index = tmpWords.indexOf(s);
 						tmpFreqs.set(index, tmpFreqs.get(index) + 1);
@@ -222,23 +296,40 @@ public class knnWithDistance {
 			}
 		}
 		
-		trainFreqs.add(Arrays.copyOf(tmpFreqs.toArray(), tmpFreqs.toArray().length, Integer[].class));
+		// Add the array to train words and frequencies
 		trainWords.add(Arrays.copyOf(tmpWords.toArray(), tmpWords.toArray().length, String[].class));
+		trainFreqs.add(Arrays.copyOf(tmpFreqs.toArray(), tmpFreqs.toArray().length, Integer[].class));
 		
 	}
 	
-	private void giveRanksTest(String[] line) {
+	private void buildTest(String[] line) {
+		
+		// tmpWords for array in trainWords
+		// tmpFreqs for array in trainFreqs
 		List<String> tmpWords = new ArrayList<String>();
 		List<Integer> tmpFreqs = new ArrayList<Integer>();
+		
+		// For words in the line, ignoring the first word because "+1" and "-1"
 		for(int i = 0; i < line.length; i++) {
+			
+			// Remove all special characters
 			String s = line[i].replaceAll("[^\\w\\s]", "").toLowerCase();
-			if(!s.equals("") && !Arrays.asList(stopwords).contains(s)) {
+			
+			// If there is a word
+			if(!s.equals("")) {
+				
+				// If the test dictionary already has the word
+				// Else add to the training dictionary, 1 to the occurrence
+				// And add the word to tmpWords and 1 to frequency
 				if(testDictionary.contains(s)) {
-					int wordIndex = testDictionary.indexOf(s);
+					
+					// If tmpWords already has the word increment the frequency
+					// Else increment the words occurrence and add the word to tmpWords and 1 to frequency
 					if(tmpWords.contains(s)) {
 						int index = tmpWords.indexOf(s);
 						tmpFreqs.set(index, tmpFreqs.get(index) + 1);
 					} else {
+						int wordIndex = testDictionary.indexOf(s);
 						int newOccur = testOccurs.get(wordIndex) + 1;
 						testOccurs.set(wordIndex, newOccur);
 						tmpWords.add(s);
@@ -253,23 +344,30 @@ public class knnWithDistance {
 			}
 		}
 		
+		// Add the array to test words and frequencies
 		testFreqs.add(Arrays.copyOf(tmpFreqs.toArray(), tmpFreqs.toArray().length, Integer[].class));
 		testWords.add(Arrays.copyOf(tmpWords.toArray(), tmpWords.toArray().length, String[].class));
 		
 	}
 	
-	private void calculateWeight() {
+	private void tfidfTrain() {
+		
+		// For all the matrices of train words per review
 		for(int i = 0; i < trainWords.size(); i++) {
 			Integer[] freqs = trainFreqs.get(i);
 			String[] words = trainWords.get(i);
 			double x = 0;
 			double y = 0;
+			
+			// For each word calculate the tf-idf
+			// And add it to x if the rank is positive
+			// Else add it to y
 			for(int j = 0; j < words.length; j++) {
 				int index = trainDictionary.indexOf(words[j]);
 				int rank = trainRanks.get(index);
 				int occur = trainOccurs.get(index);
 				int freq = freqs[j];
-				double weight = freq * (freq * (Math.log((18506/occur))/Math.log(2)));
+				double weight = (freq * (Math.log((18506/occur))/Math.log(2)));
 				if(rank > 0) {
 					x = x + weight;
 				} else {
@@ -277,13 +375,22 @@ public class knnWithDistance {
 				}
 			}
 			
+			// Add x to training x and y to training y
 			trainX.add(x);
 			trainY.add(y);
 		}
 	}
 	
-	private void calculateWeightTest() {
+	private void tfidfTest() {
+		
+		// For all the matrices of test words per review
 		for(int i = 0; i < testWords.size(); i++) {
+			
+			// For each word calculate the tf-idf based
+			// If it occurs in the training dictionary
+			// And use training occurrence and rank
+			// And add it to x if the rank is positive
+			// Else add it to y
 			Integer[] freqs = testFreqs.get(i);
 			String[] words = testWords.get(i);
 			double x = 0;
@@ -294,7 +401,7 @@ public class knnWithDistance {
 					int rank = trainRanks.get(index);
 					int occur = trainOccurs.get(index);
 					int freq = freqs[j];
-					double weight = freq * (freq * (Math.log((18506/occur))/Math.log(2)));
+					double weight = (freq * (Math.log((18506/occur))/Math.log(2)));
 					if(rank > 0) {
 						x = x + weight;
 					} else {
@@ -303,6 +410,7 @@ public class knnWithDistance {
 				}
 			}
 			
+			// Add x to test x and y to test y
 			testX.add(x);
 			testY.add(y);
 		}
